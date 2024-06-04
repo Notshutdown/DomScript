@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier d'Achat</title>
+    <style>
+        /* Ajoutez votre CSS ici */
+    </style>
+</head>
+<body>
+    <div id="cart">
+        <div class="item">
+            <span>Nom de l'article</span>
+            <button class="remove">Supprimer</button>
+            <button class="like">❤️</button>
+            <button class="decrease">-</button>
+            <span class="quantity">1</span>
+            <button class="increase">+</button>
+            <span class="price">10€</span>
+        </div>
+        <!-- Ajoutez plus d'éléments d'article ici -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = document.getElementById('cart');
+
+            cart.addEventListener('click', function(event) {
+                const target = event.target;
+                if (target.classList.contains('remove')) {
+                    target.parentElement.remove();
+                } else if (target.classList.contains('like')) {
+                    target.classList.toggle('liked');
+                } else if (target.classList.contains('increase')) {
+                    const quantityElem = target.previousElementSibling;
+                    let quantity = parseInt(quantityElem.textContent);
+                    quantityElem.textContent = ++quantity;
+                } else if (target.classList.contains('decrease')) {
+                    const quantityElem = target.nextElementSibling;
+                    let quantity = parseInt(quantityElem.textContent);
+                    if (quantity > 1) {
+                        quantityElem.textContent = --quantity;
+                    }
+                }
+
+                updateTotal();
+            });
+
+            function updateTotal() {
+                let totalPrice = 0;
+                cart.querySelectorAll('.item').forEach(item => {
+                    const priceStr = item.querySelector('.price').textContent;
+                    const price = parseFloat(priceStr.substring(0, priceStr.length - 1)); // Retirer le symbole euro
+                    const quantity = parseInt(item.querySelector('.quantity').textContent);
+                    totalPrice += price * quantity;
+                });
+                // Mettre à jour l'élément d'affichage du prix total
+                document.getElementById('total-price').textContent = totalPrice.toFixed(2) + '€';
+            }
+        });
+    </script>
+</body>
+</html>
